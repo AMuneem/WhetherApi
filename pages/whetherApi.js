@@ -10,10 +10,11 @@ const Whether = () => {
   );
   const [result, setResult] = useState();
   const [conversionType, setConversionType] = useState("celsiusToFahrenheit"); // Default conversion type
-  // const [convertBtnText, setConvertBtnText] = (`${"F"}`);
-  const [buttonText, setButtonText] = useState('Converter °C');
+  const [buttonText, setButtonText] = useState("Converter °C");
+  // const [pageloader, setPageloader] = useState(true);
+  const [dataload, setDataload] = useState();
+  // const [isLoading, setLoading] = useState(false);
 
-  
   const searchFunc = (e) => {
     setInputValue(e.target.value);
   };
@@ -56,14 +57,18 @@ const Whether = () => {
 
   const fetchWhetherData = async () => {
     try {
+      // setLoading(true)
       const fetchApi = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${searchBtn}?unitGroup=us&key=JY5P32XCP658ZTME3SQTMUT4H&contentType=json`;
 
       const response = await fetch(fetchApi);
 
       const data = await response.json();
       setWhetherData(data);
-      console.log(data, "data");
+      console.log(data, " data ");
       setResult(`${data.currentConditions?.temp} °F`);
+
+      setDataload(data);
+      // setLoading();
     } catch (error) {
       alert("Please Enter Corrct City Name");
     }
@@ -83,20 +88,39 @@ const Whether = () => {
     if (conversionType === "celsiusToFahrenheit") {
       setResult(`${whetherData.currentConditions?.temp} °F`);
       setConversionType("fahrenheitToCelsius");
-      setButtonText('Converter °C');
+      setButtonText("Converter °C");
     } else if (conversionType === "fahrenheitToCelsius") {
       const celsius = ((whetherData.currentConditions?.temp - 32) * 5) / 9;
       setResult(`${celsius.toFixed(2)} °C`);
       setConversionType("celsiusToFahrenheit");
-      setButtonText('Converter °F');
+      setButtonText("Converter °F");
     }
   };
 
   useEffect(() => {
-    fetchWhetherData();
+    // fetchWhetherData();
     backgroundImages();
+    const intervalId = setInterval(fetchWhetherData, 5000);
     // convertTemperature();
+    // setLoading(false);
   }, [searchBtn]);
+  // if (isLoading) return <p>Loading...</p>
+  if (!dataload)
+    return (
+      <>
+        <div className='loadin_wrapper'>
+          <div className='content'>
+            <div className='ball red'></div>
+            <div className='ball green'></div>
+            <div className='ball yellow'></div>
+            <div className='ball blue'></div>
+            <div className='ball emerald-green'></div>
+            <div className='ball pink'></div>
+          </div>
+        </div>
+      </>
+    );
+
   return (
     <>
       <div className='whetherWrapper'>
