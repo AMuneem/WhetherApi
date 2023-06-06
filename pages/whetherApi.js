@@ -42,11 +42,11 @@ const Whether = () => {
       );
       setInputValue("");
       setSearchBtn(inputValue);
-      setResult(`${whetherData.currentConditions?.temp} °F`);
+      setResult(`${whetherData.currentConditions?.temp} °F `);
     }
 
     setSearchBtn(inputValue);
-    setResult(`${whetherData.currentConditions?.temp} °F`);
+    setResult(`${whetherData.currentConditions?.temp} °F `);
 
     setInputValue("");
   };
