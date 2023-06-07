@@ -12,8 +12,8 @@ const Whether = () => {
   const [conversionType, setConversionType] = useState("celsiusToFahrenheit"); // Default conversion type
   const [buttonText, setButtonText] = useState("Converter °C");
   // const [pageloader, setPageloader] = useState(true);
-  const [dataload, setDataload] = useState();
-  // const [isLoading, setLoading] = useState(false);
+  // const [dataload, setDataload] = useState();
+  const [isLoading, setLoading] = useState(false);
 
   const searchFunc = (e) => {
     setInputValue(e.target.value);
@@ -57,7 +57,7 @@ const Whether = () => {
 
   const fetchWhetherData = async () => {
     try {
-      // setLoading(true)
+      setLoading(true);
       const fetchApi = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${searchBtn}?unitGroup=us&key=JY5P32XCP658ZTME3SQTMUT4H&contentType=json`;
 
       const response = await fetch(fetchApi);
@@ -67,8 +67,7 @@ const Whether = () => {
       console.log(data, " data ");
       setResult(`${data.currentConditions?.temp} °F`);
 
-      setDataload(data);
-      // setLoading();
+      setLoading(false);
     } catch (error) {
       alert("Please Enter Corrct City Name");
     }
@@ -96,16 +95,13 @@ const Whether = () => {
       setButtonText("Converter °F");
     }
   };
-
+  // https://betterprogramming.pub/how-to-create-a-loading-screen-for-client-side-fetching-in-nextjs-eaede11c0921
   useEffect(() => {
-    // fetchWhetherData();
+    fetchWhetherData();
     backgroundImages();
-    const intervalId = setInterval(fetchWhetherData, 5000);
-    // convertTemperature();
-    // setLoading(false);
   }, [searchBtn]);
-  // if (isLoading) return <p>Loading...</p>
-  if (!dataload)
+
+  if (isLoading)
     return (
       <>
         <div className='loadin_wrapper'>
