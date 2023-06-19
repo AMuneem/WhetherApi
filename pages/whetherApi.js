@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 const Whether = () => {
   const [whetherData, setWhetherData] = useState([]);
-  const [inputValue, setInputValue] = useState();
+  const [inputValue, setInputValue] = useState('');
   const [searchBtn, setSearchBtn] = useState("Karachi");
   const [imageApi, setImageApi] = useState([]);
   const [backgroundImage, setBackgroundImage] = useState(
@@ -11,15 +11,13 @@ const Whether = () => {
   const [result, setResult] = useState();
   const [conversionType, setConversionType] = useState("celsiusToFahrenheit"); // Default conversion type
   const [buttonText, setButtonText] = useState("Converter °C");
-  // const [pageloader, setPageloader] = useState(true);
-  // const [dataload, setDataload] = useState();
   const [isLoading, setLoading] = useState(false);
 
   const searchFunc = (e) => {
     setInputValue(e.target.value);
   };
   const searchButton = () => {
-    if (inputValue === "lahore") {
+    if (inputValue === "lahore" || inputValue === "Lahore" || inputValue === "LAHORE") {
       setBackgroundImage(`images/lahore.jpg`);
     } else if (inputValue === "karachi") {
       setBackgroundImage(`images/karachi.jpg`);
@@ -39,11 +37,9 @@ const Whether = () => {
       setBackgroundImage(`images/paris.jpg`);
     } else {
       setBackgroundImage(
-        `https://mdbgo.io/ascensus/mdb-advanced/img/clouds.gif`
+        `images/clouds.gif`
       );
-      setInputValue("");
-      setSearchBtn(inputValue);
-      setResult(`${whetherData.currentConditions?.temp} °F `);
+      
     }
 
     setSearchBtn(inputValue);
@@ -62,14 +58,16 @@ const Whether = () => {
 
       const response = await fetch(fetchApi);
 
-      const data = await response.json();
+      const data = await response.json();    
       setWhetherData(data);
       console.log(data, " data ");
       setResult(`${data.currentConditions?.temp} °F`);
 
       setLoading(false);
     } catch (error) {
+      
       alert("Please Enter Corrct City Name");
+      setLoading(false);
     }
   };
 
@@ -95,10 +93,11 @@ const Whether = () => {
       setButtonText("Converter °F");
     }
   };
-  // https://betterprogramming.pub/how-to-create-a-loading-screen-for-client-side-fetching-in-nextjs-eaede11c0921
+ 
   useEffect(() => {
     fetchWhetherData();
     backgroundImages();
+   
   }, [searchBtn]);
 
   if (isLoading)
@@ -116,7 +115,7 @@ const Whether = () => {
         </div>
       </>
     );
-
+   
   return (
     <>
       <div className='whetherWrapper'>
@@ -202,4 +201,13 @@ const Whether = () => {
   );
 };
 
+// var str = 'AMMAR';
+// var result = '';
+
+// for (var i = str.length - 1; i >= 0; i--) {
+//   result += str[i];
+// }
+
+// console.log(result);
+ // https://betterprogramming.pub/how-to-create-a-loading-screen-for-client-side-fetching-in-nextjs-eaede11c0921
 export default Whether;
