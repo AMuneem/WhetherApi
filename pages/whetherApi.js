@@ -1,85 +1,114 @@
 import { useEffect, useState } from "react";
+import ClipLoader from "react-spinners/ScaleLoader";
 
+const override = {
+  display: "block",
+  margin: "0 auto",
+  borderColor: "red",
+};
 const Whether = () => {
+  let [loading, setLoading] = useState(false);
+  let [color, setColor] = useState("#ffffff");
   const [whetherData, setWhetherData] = useState([]);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
   const [searchBtn, setSearchBtn] = useState("Karachi");
-  const [imageApi, setImageApi] = useState([]);
   const [backgroundImage, setBackgroundImage] = useState(
-    "https://mdbgo.io/ascensus/mdb-advanced/img/clouds.gif"
+    // "https://mdbgo.io/ascensus/mdb-advanced/img/clouds.gif"
+    "https://res.cloudinary.com/dtwolquu4/image/upload/v1687257613/clouds_zvmd4w.gif"
   );
   const [result, setResult] = useState();
   const [conversionType, setConversionType] = useState("celsiusToFahrenheit"); // Default conversion type
   const [buttonText, setButtonText] = useState("Converter °C");
-  const [isLoading, setLoading] = useState(false);
+  // const [isLoading, setLoading] = useState(false);
 
   const searchFunc = (e) => {
-    setInputValue(e.target.value);
+    const value = e.target.value.toLowerCase();
+
+    const values = value.charAt(0).toUpperCase() + value.slice(1);
+    setInputValue(values);
   };
-  const searchButton = () => {
-    if (inputValue === "lahore" || inputValue === "Lahore" || inputValue === "LAHORE") {
-      setBackgroundImage(`images/lahore.jpg`);
-    } else if (inputValue === "karachi") {
-      setBackgroundImage(`images/karachi.jpg`);
-    } else if (inputValue === "murree") {
-      setBackgroundImage(`images/murree.jpg`);
-    } else if (inputValue === "pindi") {
-      setBackgroundImage(`images/pindi.jpg`);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (inputValue === "Lahore") {
+      setBackgroundImage(
+        `https://res.cloudinary.com/dtwolquu4/image/upload/v1687258663/lahore_asxwte.jpg`
+      );
+    } else if (inputValue === "Karachi") {
+      setBackgroundImage(
+        `https://res.cloudinary.com/dtwolquu4/image/upload/v1687258662/karachi_wlmxqi.jpg`
+      );
+    } else if (inputValue === "Murree") {
+      setBackgroundImage(
+        `https://res.cloudinary.com/dtwolquu4/image/upload/v1687258662/murree_plk76w.jpg`
+      );
+    } else if (inputValue === "Pindi") {
+      setBackgroundImage(
+        `https://res.cloudinary.com/dtwolquu4/image/upload/v1687258667/pindi_phorua.jpg`
+      );
     } else if (inputValue === "islamabad") {
-      setBackgroundImage(`images/islamabad.jpg`);
-    } else if (inputValue === "newyork") {
-      setBackgroundImage(`images/newyork.jpg`);
-    } else if (inputValue === "london") {
-      setBackgroundImage(`images/london.jpg`);
-    } else if (inputValue === "paris") {
-      setBackgroundImage(`images/paris.jpg`);
-    } else if (inputValue === "china") {
-      setBackgroundImage(`images/paris.jpg`);
+      setBackgroundImage(
+        `https://res.cloudinary.com/dtwolquu4/image/upload/v1687258665/islamabad_t5ffi5.jpg`
+      );
+    } else if (inputValue === "Kashmir") {
+      setBackgroundImage(
+        `https://res.cloudinary.com/dtwolquu4/image/upload/v1687258664/murrees_b65xla.jpg`
+      );
+    } else if (inputValue === "London") {
+      setBackgroundImage(
+        `https://res.cloudinary.com/dtwolquu4/image/upload/v1687258675/london_r5gnwj.jpg`
+      );
+    } else if (inputValue === "Paris") {
+      setBackgroundImage(
+        `https://res.cloudinary.com/dtwolquu4/image/upload/v1687258665/paris_oxewgk.jpg`
+      );
+    } else if (inputValue === "Newyork") {
+      setBackgroundImage(
+        `https://res.cloudinary.com/dtwolquu4/image/upload/v1687258665/newyork_zovl3u.jpg`
+      );
+    } else if (inputValue === "") {
+      setBackgroundImage(
+        `https://res.cloudinary.com/dtwolquu4/image/upload/v1687258662/karachi_wlmxqi.jpg`
+      );
+      setInputValue("Karachi");
     } else {
       setBackgroundImage(
-        `images/clouds.gif`
+        `https://res.cloudinary.com/dtwolquu4/image/upload/v1687257613/clouds_zvmd4w.gif`
       );
-      
+      setInputValue("Karachi");
+      setSearchBtn("karachi");
     }
 
     setSearchBtn(inputValue);
     setResult(`${whetherData.currentConditions?.temp} °F `);
-
     setInputValue("");
   };
 
   // copy URL
   // "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/karachi?unitGroup=us&key=JY5P32XCP658ZTME3SQTMUT4H&contentType=json"
-
+  const fetchApi = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${searchBtn}?unitGroup=us&key=JY5P32XCP658ZTME3SQTMUT4H&contentType=json`;
   const fetchWhetherData = async () => {
     try {
       setLoading(true);
-      const fetchApi = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${searchBtn}?unitGroup=us&key=JY5P32XCP658ZTME3SQTMUT4H&contentType=json`;
+      console.log(searchBtn);
 
+      if (!searchBtn) {
+        setSearchBtn("karachi");
+      }
       const response = await fetch(fetchApi);
+      const data = await response.json();
 
-      const data = await response.json();    
-      setWhetherData(data);
-      console.log(data, " data ");
-      setResult(`${data.currentConditions?.temp} °F`);
+      setTimeout(async () => {
+        setWhetherData(data);
+        setResult(`${data.currentConditions?.temp} °F`);
 
-      setLoading(false);
+        setLoading(false);
+      }, 2000);
     } catch (error) {
-      
-      alert("Please Enter Corrct City Name");
+      alert("Please Enter Correct City Name");
       setLoading(false);
     }
   };
 
-  // images api
-
-  const backgroundImages = async () => {
-    const responseImage = await fetch(
-      "https://api.slingacademy.com/v1/sample-data/photos"
-    );
-    const imagesData = await responseImage.json();
-    setImageApi(imagesData);
-  };
 
   const convertTemperature = () => {
     if (conversionType === "celsiusToFahrenheit") {
@@ -93,17 +122,25 @@ const Whether = () => {
       setButtonText("Converter °F");
     }
   };
- 
+
   useEffect(() => {
     fetchWhetherData();
-    backgroundImages();
-   
   }, [searchBtn]);
 
-  if (isLoading)
+  if (loading)
     return (
       <>
-        <div className='loadin_wrapper'>
+        <ClipLoader
+          className='clipLoader_span'
+          color={color}
+          loading={loading}
+          cssOverride={override}
+          size={150}
+          aria-label='Loading Spinner'
+          data-testid='loader'
+        />
+
+        {/* <div className='loadin_wrapper'>
           <div className='content'>
             <div className='ball red'></div>
             <div className='ball green'></div>
@@ -112,13 +149,13 @@ const Whether = () => {
             <div className='ball emerald-green'></div>
             <div className='ball pink'></div>
           </div>
-        </div>
+        </div> */}
       </>
     );
-   
+
   return (
     <>
-      <div className='whetherWrapper'>
+      <div className='whetherWrapper sweet-loading'>
         <div>
           <div className='TemperaturWrapper'>
             <div
@@ -128,15 +165,17 @@ const Whether = () => {
               }}>
               <div className='tempInner'>
                 <div className='whetherSearch'>
-                  <input
-                    type='search'
-                    value={inputValue}
-                    onChange={searchFunc}
-                  />
+                  <form onSubmit={handleSubmit}>
+                    <input
+                      type='search'
+                      value={inputValue}
+                      onChange={searchFunc}
+                    />
+                  </form>
                 </div>
 
                 <div className='serachBtn'>
-                  <button onClick={searchButton}>Search</button>
+                  <button onClick={handleSubmit}>Search</button>
                 </div>
 
                 <div className='timezone'>{whetherData.address}</div>
@@ -203,11 +242,9 @@ const Whether = () => {
 
 // var str = 'AMMAR';
 // var result = '';
-
 // for (var i = str.length - 1; i >= 0; i--) {
 //   result += str[i];
 // }
-
 // console.log(result);
- // https://betterprogramming.pub/how-to-create-a-loading-screen-for-client-side-fetching-in-nextjs-eaede11c0921
+// https://betterprogramming.pub/how-to-create-a-loading-screen-for-client-side-fetching-in-nextjs-eaede11c0921
 export default Whether;
