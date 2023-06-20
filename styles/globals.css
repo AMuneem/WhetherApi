@@ -306,3 +306,12 @@ height: 100vh;
 .clipLoader_span span{
   background: #04ffce !important;
 }
+
+
+@media only screen and (max-width: 600px) {
+  .TemperaturWrapper {
+    width: 90%;
+    
+  }
+
+}
