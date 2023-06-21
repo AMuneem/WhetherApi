@@ -23,8 +23,9 @@ const Whether = () => {
 
   const searchFunc = (e) => {
     const value = e.target.value.toLowerCase();
-
-    const values = value.charAt(0).toUpperCase() + value.slice(1);
+    const trimValue = value.trim();
+    const values = trimValue.charAt(0).toUpperCase() + trimValue.slice(1);
+    // const cleanValue = values.trim();
     setInputValue(values);
   };
   const handleSubmit = (e) => {
@@ -45,7 +46,7 @@ const Whether = () => {
       setBackgroundImage(
         `https://res.cloudinary.com/dtwolquu4/image/upload/v1687258667/pindi_phorua.jpg`
       );
-    } else if (inputValue === "islamabad") {
+    } else if (inputValue === "Islamabad") {
       setBackgroundImage(
         `https://res.cloudinary.com/dtwolquu4/image/upload/v1687258665/islamabad_t5ffi5.jpg`
       );
@@ -227,6 +228,7 @@ const Whether = () => {
                           <div> {days?.tempmax}</div>
                           <div> {days?.tempmin}</div>
                         </div>
+                        
                       </>
                     );
                   })}
